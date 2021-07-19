@@ -11,3 +11,8 @@ build/
 
 # Directory created by dartdoc
 doc/api/
+
+# generated files 
+*.g.dart
+*.freezed.dart
+*.mocks.dart
