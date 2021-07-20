@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:analysis_server_lib/analysis_server_lib.dart';
 import 'package:functions_framework/functions_framework.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf_web_socket/shelf_web_socket.dart';
@@ -12,7 +13,7 @@ final handler = webSocketHandler((WebSocketChannel webSocket) {
   webSocket.stream.listen(
     (message) {
       // final jsonData = jsonDecode(message);
-      webSocket.sink.add(message);
+      webSocket.sink.add(message + versionResult!.version);
     },
     onError: (error) {
       print(error);
@@ -24,5 +25,16 @@ final handler = webSocketHandler((WebSocketChannel webSocket) {
   );
 });
 
+AnalysisServer? analysisServer;
+VersionResult? versionResult;
+
 @CloudFunction()
-FutureOr<Response> function(Request request) => handler(request);
+FutureOr<Response> function(Request request) async {
+  analysisServer ??= await AnalysisServer.create();
+  final analysis = analysisServer!;
+  await analysis.server.onConnected.first;
+
+  versionResult ??= await analysis.server.getVersion();
+
+  return handler(request);
+}
