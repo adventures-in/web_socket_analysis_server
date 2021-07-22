@@ -16,6 +16,11 @@ dart run build_runner watch
 
 ### Hosted environment (simulated locally)
 
+Use the VS Code [Docker Extension](https://code.visualstudio.com/docs/containers/overview) to build and run a container.
+
+<details>
+<summary><b>Or for command line wizards</b></summary>
+
 ```sh
 docker build -t web_socket_analysis_server_image .
 docker run -it -p 8080:8080 --name web_socket_analysis_server web_socket_analysis_server_image
@@ -28,7 +33,11 @@ docker rm -f web_socket_analysis_server        # remove the container
 docker image rm web_socket_analysis_server_image   # remove the image
 ```
 
+</details>
+
 ### Local environment
+
+Run the server directly from the command line:
 
 ```sh
 dart run bin/server.dart

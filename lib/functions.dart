@@ -30,11 +30,16 @@ VersionResult? versionResult;
 
 @CloudFunction()
 FutureOr<Response> function(Request request) async {
-  analysisServer ??= await AnalysisServer.create();
-  final analysis = analysisServer!;
-  await analysis.server.onConnected.first;
+  try {
+    analysisServer ??= await AnalysisServer.create();
+    final analysis = analysisServer!;
+    await analysis.server.onConnected.first;
 
-  versionResult ??= await analysis.server.getVersion();
+    versionResult ??= await analysis.server.getVersion();
 
-  return handler(request);
+    return handler(request);
+  } catch (error, trace) {
+    print(trace);
+    return Response.internalServerError(body: error);
+  }
 }
